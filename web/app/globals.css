@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #1c2430;
+  --linen: #e8e4dc;
+  --paper: #f7f4ee;
+  --indigo: #3d4f7c;
+  --vat: #2f5d50;
+  --turmeric: #d4a017;
+  --madder: #a33b3b;
+  --muted: #5c6570;
+  --rule: #cfc8bb;
+  --tape: #e7c56a;
+}
+
+html,
+body {
+  background: var(--linen);
+  color: var(--ink);
+  font-size: 18px;
+}
+
+.tape {
+  background: repeating-linear-gradient(
+    -12deg,
+    var(--tape) 0 14px,
+    #f0d78a 14px 28px
+  );
+  color: var(--ink);
+  border-top: 1px dashed #1c243055;
+  border-bottom: 1px dashed #1c243055;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--turmeric);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,19 @@
+services:
+  - type: worker
+    name: voicecart-agent
+    runtime: docker
+    dockerfilePath: ./agent/Dockerfile
+    dockerContext: ./agent
+    envVars:
+      - key: LIVEKIT_URL
+        sync: false
+      - key: LIVEKIT_API_KEY
+        sync: false
+      - key: LIVEKIT_API_SECRET
+        sync: false
+      - key: SARVAM_API_KEY
+        sync: false
+      - key: STORE_API_URL
+        sync: false
+      - key: AGENT_SHARED_SECRET
+        sync: false

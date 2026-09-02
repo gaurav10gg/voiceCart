@@ -761,4 +761,12 @@ async def entrypoint(ctx: JobContext) -> None:
 
 
 if __name__ == "__main__":
-    cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint, load_threshold=0.95))
+    # Hosts that only offer web services need the health server on their assigned port.
+    # When the shop shares the container it owns $PORT, so AGENT_HEALTH_PORT wins.
+    cli.run_app(
+        WorkerOptions(
+            entrypoint_fnc=entrypoint,
+            load_threshold=0.95,
+            port=int(os.getenv("AGENT_HEALTH_PORT") or os.getenv("PORT") or 8081),
+        )
+    )

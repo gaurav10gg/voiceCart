@@ -1,9 +1,15 @@
 services:
-  - type: worker
-    name: voicecart-agent
+  # One container runs the shop and the agent, the way they run locally.
+  # Render's free tier gives 750 instance hours a month, so a single always-on
+  # service (~730 hours) fits with room to spare — two would not.
+  - type: web
+    name: voicecart
     runtime: docker
-    dockerfilePath: ./agent/Dockerfile
-    dockerContext: ./agent
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
     envVars:
       - key: LIVEKIT_URL
         sync: false
@@ -13,7 +19,9 @@ services:
         sync: false
       - key: SARVAM_API_KEY
         sync: false
-      - key: STORE_API_URL
-        sync: false
       - key: AGENT_SHARED_SECRET
         sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: NUM_CPUS
+        value: "1"

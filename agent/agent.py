@@ -767,6 +767,9 @@ if __name__ == "__main__":
         WorkerOptions(
             entrypoint_fnc=entrypoint,
             load_threshold=0.95,
+            num_idle_processes=0,
+            initialize_process_timeout=30.0,
+            job_memory_warn_mb=0,
             port=int(os.getenv("AGENT_HEALTH_PORT") or os.getenv("PORT") or 8081),
         )
     )

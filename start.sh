@@ -12,18 +12,18 @@ echo "[start] shop on :${SHOP_PORT}"
 PORT="$SHOP_PORT" HOSTNAME=0.0.0.0 node /app/web/server.js &
 shop=$!
 
-echo "[start] kamala, health on :${AGENT_HEALTH_PORT}"
+echo "[start] agent, health on :${AGENT_HEALTH_PORT}"
 python3 /app/agent/agent.py start &
-kamala=$!
+agent=$!
 
 shutdown() {
-  kill "$shop" "$kamala" 2>/dev/null || true
+  kill "$shop" "$agent" 2>/dev/null || true
 }
 trap shutdown TERM INT
 
 # Exit if either half dies so the platform restarts a clean container rather than
 # leaving a half-dead service that answers HTTP but never picks up a call.
-wait -n "$shop" "$kamala"
+wait -n "$shop" "$agent"
 echo "[start] one process exited, stopping the container"
 shutdown
 exit 1

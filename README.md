@@ -2,7 +2,7 @@
 
 A clothing shop you can talk to. Built for a grandmother who knows exactly what she wants and should not have to search a grid, pick a size from a dropdown, and click through checkout.
 
-Kamala is a LiveKit voice agent (Sarvam STT → Sarvam 105B → Sarvam TTS) that searches the catalog, disambiguates size / colour / print, fills the bag, and places the order. The storefront updates live so a family member watching can see the work happen.
+The shop's voice agent is a LiveKit worker (Sarvam STT → Sarvam 105B → Sarvam TTS) that searches the catalog, disambiguates size / colour / print, fills the bag, and places the order. The storefront updates live so a family member watching can see the work happen.
 
 ## Who this is for
 

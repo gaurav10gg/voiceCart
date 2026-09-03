@@ -46,7 +46,7 @@ export function CartRail({ cart }: { cart: Cart }) {
       if (!cart.address?.pincode || !cart.address.line1 || !cart.address.city) {
         const saved = await saveTypedAddress();
         if (saved.status === "needs_address") {
-          setError(saved.message || "Tell Kamala the house, city, and pin code.");
+          setError(saved.message || "Tell the shop the house, city, and pin code.");
           return;
         }
         if (saved.error) {
@@ -83,7 +83,7 @@ export function CartRail({ cart }: { cart: Cart }) {
     <aside className="rounded-2xl border border-[var(--rule)] bg-[var(--paper)] p-5">
       <h2 className="font-[family-name:var(--font-display)] text-2xl">Your bag</h2>
       {cart.items.length === 0 ? (
-        <p className="mt-3 text-[var(--muted)]">Empty. Talk to Kamala or tap Add to bag.</p>
+        <p className="mt-3 text-[var(--muted)]">Empty. Talk to the shop or tap Add to bag.</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {cart.items.map((item) => (
@@ -187,7 +187,7 @@ function AddressSlip({
         </div>
       ) : (
         <div className="mt-2 space-y-2">
-          <p className="text-sm text-[var(--muted)]">Tell Kamala the house and city. Then the pin, slowly, all six digits.</p>
+          <p className="text-sm text-[var(--muted)]">Tell the shop the house and city. Then the pin, slowly, all six digits.</p>
           {digitField === "pincode" || pinHeard ? (
             <p className="font-mono text-lg tracking-[0.2em]">PIN {pinSlots}</p>
           ) : null}

@@ -25,7 +25,7 @@ export function ControlPanel({
     <div className="fixed inset-0 z-40 flex justify-end bg-black/30">
       <aside className="flex h-full w-full max-w-xl flex-col overflow-auto bg-[var(--paper)] p-6 shadow-2xl">
         <div className="flex items-center justify-between">
-          <h2 className="font-[family-name:var(--font-display)] text-3xl">Tune Kamala</h2>
+          <h2 className="font-[family-name:var(--font-display)] text-3xl">Tune the agent</h2>
           <button type="button" onClick={onClose} className="min-h-10 px-3 text-lg underline">
             Close
           </button>
@@ -81,7 +81,7 @@ export function ControlPanel({
         </select>
 
         <label className="mt-5 block text-sm font-semibold">Spoken language</label>
-        <p className="mt-1 text-sm text-[var(--muted)]">Saved immediately. Kamala will greet and reply in this language.</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Saved immediately. The shop will greet and reply in this language.</p>
         <select
           value={settings.language}
           onChange={(e) => onChange({ ...settings, language: e.target.value })}

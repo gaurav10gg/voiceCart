@@ -205,16 +205,16 @@ _LANG_EXTRA = {
 
 _GREET = {
     "ta-IN": (
-        "வணக்கம் {name}. நான் கமலா. இன்னைக்கு என்ன வாங்கணும்?",
-        "வணக்கம். நான் கமலா. இன்னைக்கு என்ன வாங்கணும்?",
+        "வணக்கம் {name}. நான் கடையின் வாய்ஸ் ஏஜென்ட். இன்னைக்கு என்ன வாங்கணும்?",
+        "வணக்கம். நான் கடையின் வாய்ஸ் ஏஜென்ட். இன்னைக்கு என்ன வாங்கணும்?",
     ),
     "hi-IN": (
-        "नमस्ते {name}. मैं कमला हूँ. आज क्या लेना है?",
-        "नमस्ते. मैं कमला हूँ. आज क्या लेना है?",
+        "नमस्ते {name}. मैं दुकान का वॉइस एजेंट हूँ. आज क्या लेना है?",
+        "नमस्ते. मैं दुकान का वॉइस एजेंट हूँ. आज क्या लेना है?",
     ),
     "en-IN": (
-        "Hello {name}. I am Kamala. What would you like to buy today?",
-        "Hello. I am Kamala. What would you like to buy today?",
+        "Hello {name}. I am the shop's voice agent. What would you like to buy today?",
+        "Hello. I am the shop's voice agent. What would you like to buy today?",
     ),
 }
 

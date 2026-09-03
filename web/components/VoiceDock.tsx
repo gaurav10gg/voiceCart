@@ -4,7 +4,7 @@ import { Room, RoomEvent, Track } from "livekit-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AgentSettings, TurnLatency } from "@/lib/types";
 
-type Caption = { who: "you" | "kamala"; text: string };
+type Caption = { who: "you" | "shop"; text: string };
 
 export function VoiceDock({
   sid,
@@ -68,7 +68,7 @@ export function VoiceDock({
         document.body.appendChild(el);
       });
       room.on(RoomEvent.TranscriptionReceived, (segments, participant) => {
-        const who = participant?.isLocal ? "you" : "kamala";
+        const who = participant?.isLocal ? "you" : "shop";
         for (const segment of segments) {
           const text = segment.text.trim();
           if (!text) continue;
@@ -124,7 +124,7 @@ export function VoiceDock({
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--indigo)]">Talk to the shop</p>
-          <h2 className="font-[family-name:var(--font-display)] text-2xl">Kamala is on the floor</h2>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl">The shop can hear you</h2>
         </div>
         <span
           className={`h-3 w-3 rounded-full ${status === "live" ? "bg-[var(--vat)]" : "bg-[var(--rule)]"}`}
@@ -170,7 +170,7 @@ export function VoiceDock({
         ) : (
           captions.map((c, i) => (
             <p key={`${c.who}-${i}`}>
-              <span className="font-semibold">{c.who === "you" ? "You" : "Kamala"}: </span>
+              <span className="font-semibold">{c.who === "you" ? "You" : "Shop"}: </span>
               {c.text}
             </p>
           ))

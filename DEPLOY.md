@@ -1,6 +1,6 @@
 # Deploying VoiceCart to Render (free tier, one service)
 
-The shop and Kamala share a single container, the way they run locally. LiveKit Cloud stays
+The shop and the voice agent share a single container, the way they run locally. LiveKit Cloud stays
 where it is — only this container needs hosting.
 
 Render's free tier needs no payment method. Singapore is the closest free region to Sarvam's
@@ -15,7 +15,7 @@ each workspace gets **750 free instance hours per calendar month**, so two alway
 One service running around the clock is ~730 hours. That fits, which means you can keep it
 permanently awake and reviewers never hit a cold start.
 
-Combining them has two side benefits. Kamala's tool calls become a loopback hop instead of a
+Combining them has two side benefits. The agent's tool calls become a loopback hop instead of a
 network round trip, and a single ping keeps both halves alive — pinging the shop keeps the
 container up, and the agent lives in that same container.
 
@@ -26,12 +26,12 @@ The tradeoff is that the two restart together. Fine for a demo.
 `start.sh` launches both processes:
 
 - The shop binds Render's `$PORT`, which is the public HTTPS URL.
-- Kamala's LiveKit health server binds `AGENT_HEALTH_PORT` (8081) so it doesn't collide.
+- The agent's LiveKit health server binds `AGENT_HEALTH_PORT` (8081) so it doesn't collide.
 - `STORE_API_URL` is set to `http://127.0.0.1:$PORT` automatically — don't set it yourself.
 
 If either process dies, the script stops the other and exits non-zero, so Render restarts a
 clean container. Without that, you could end up with a service that still answers HTTP while
-Kamala is dead — which looks fine in a browser and fails every call.
+the agent is dead — which looks fine in a browser and fails every call.
 
 ## Setup
 
@@ -72,7 +72,7 @@ count; if it misreads the container limit it spawns several and exhausts the 512
 ### Keep it awake
 
 Point a free uptime monitor (UptimeRobot or cron-job.org) at the service URL every 10
-minutes. Free services sleep after 15 idle minutes, and a sleeping container means Kamala is
+minutes. Free services sleep after 15 idle minutes, and a sleeping container means the agent is
 not registered with LiveKit and will miss every call — she can't wake herself, because
 LiveKit dispatches over an outbound WebSocket that doesn't count as incoming traffic.
 
@@ -83,9 +83,9 @@ what breaks it.
 
 In order — each step depends on the one before:
 
-1. Logs show `[start] shop`, `[start] kamala`, then `registered worker` with your LiveKit URL.
+1. Logs show `[start] shop`, `[start] agent`, then `registered worker` with your LiveKit URL.
 2. The service URL loads the catalog.
-3. **Start talking** connects and Kamala greets you.
+3. **Start talking** connects and the shop greets you.
 4. Complete one order: add an item, give a house number and city, say the pin digits, then
    say to place the order. That path has broken most often.
 

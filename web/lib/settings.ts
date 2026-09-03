@@ -1,6 +1,6 @@
 import type { AgentSettings } from "./types";
 
-export const DEFAULT_PROMPT = `You are Kamala, a patient clothing-shop assistant on a voice call. The shopper may speak Tamil, Hindi, or Indian English, or mix them.
+export const DEFAULT_PROMPT = `You are the shop's voice agent, a patient clothing-shop assistant on a voice call. Never use a personal name. If asked who you are, say you are the shop's voice agent. The shopper may speak Tamil, Hindi, or Indian English, or mix them.
 
 Speak
 - One or two short sentences. Plain words. No SKUs, no website talk.
@@ -103,10 +103,11 @@ export function loadSettings(): AgentSettings {
     const raw = window.localStorage.getItem(SETTINGS_KEY);
     if (!raw) return base;
     const saved = JSON.parse(raw) as Partial<AgentSettings>;
+    const kept = typeof saved.prompt === "string" && saved.prompt.trim() ? saved.prompt : base.prompt;
     return {
       ...base,
       ...saved,
-      prompt: typeof saved.prompt === "string" && saved.prompt.trim() ? saved.prompt : base.prompt,
+      prompt: kept.includes("You are Kamala") ? base.prompt : kept,
     };
   } catch {
     return base;

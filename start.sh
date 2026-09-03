@@ -12,6 +12,16 @@ echo "[start] shop on :${SHOP_PORT}"
 PORT="$SHOP_PORT" HOSTNAME=0.0.0.0 node /app/web/server.js &
 shop=$!
 
+# Wait for the shop to be ready before starting the agent so the first
+# tool call (greeting → search) doesn't race against Node startup.
+for i in $(seq 1 30); do
+  if curl -sf "http://127.0.0.1:${SHOP_PORT}/api/products?q=test" >/dev/null 2>&1; then
+    echo "[start] shop ready after ${i}s"
+    break
+  fi
+  sleep 1
+done
+
 echo "[start] agent, health on :${AGENT_HEALTH_PORT}"
 python3 /app/agent/agent.py start &
 agent=$!

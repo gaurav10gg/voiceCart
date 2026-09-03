@@ -13,7 +13,7 @@ FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3 python3-venv \
+    && apt-get install -y --no-install-recommends python3 python3-venv curl \
     && rm -rf /var/lib/apt/lists/*
 
 # A venv keeps pip away from Debian's externally-managed system Python.

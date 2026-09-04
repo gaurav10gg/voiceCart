@@ -9,7 +9,7 @@ services:
     region: singapore
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    healthCheckPath: /
+    healthCheckPath: /api/health
     envVars:
       - key: LIVEKIT_URL
         sync: false

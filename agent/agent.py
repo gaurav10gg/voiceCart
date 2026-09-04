@@ -767,8 +767,12 @@ async def entrypoint(ctx: JobContext) -> None:
 
     logger.info("shop tools ready sid=%s store=%s", sid, STORE_API_URL)
     logger.info("session starting room=%s", room_name)
-    await session.start(agent=agent, room=ctx.room, record=False)
-    logger.info("session ended room=%s", room_name)
+    try:
+        await session.start(agent=agent, room=ctx.room, record=False)
+        logger.info("session ended room=%s", room_name)
+    except Exception:
+        logger.exception("session crashed room=%s", room_name)
+        raise
 
 
 if __name__ == "__main__":
@@ -781,7 +785,7 @@ if __name__ == "__main__":
             # the only caller because of that, and keep one warm process so the
             # first "Start talking" click is not 15s late.
             load_threshold=float("inf"),
-            num_idle_processes=1,
+            num_idle_processes=0,
             initialize_process_timeout=60.0,
             job_memory_warn_mb=0,
             port=int(os.getenv("AGENT_HEALTH_PORT") or os.getenv("PORT") or 8081),

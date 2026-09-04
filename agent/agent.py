@@ -719,12 +719,13 @@ async def entrypoint(ctx: JobContext) -> None:
     cfg = await fetch_config(http, room_name)
     sid = cfg.get("sid")
     if not sid or sid == room_name:
-        if room_name.startswith("vc-guest-"):
-            sid = f"guest:{room_name[len('vc-guest-'):]}"
-        elif room_name.startswith("vc-user-"):
-            sid = f"user:{room_name[len('vc-user-'):]}"
+        base = room_name.split("--")[0]
+        if base.startswith("vc-guest-"):
+            sid = f"guest:{base[len('vc-guest-'):]}"
+        elif base.startswith("vc-user-"):
+            sid = f"user:{base[len('vc-user-'):]}"
         else:
-            sid = room_name[3:] if room_name.startswith("vc-") else room_name
+            sid = base[3:] if base.startswith("vc-") else base
     cfg["sid"] = sid
     settings = cfg.get("settings") or {}
     if not settings.get("prompt"):
@@ -786,7 +787,7 @@ if __name__ == "__main__":
             # the only caller because of that, and keep one warm process so the
             # first "Start talking" click is not 15s late.
             load_threshold=float("inf"),
-            num_idle_processes=0,
+            num_idle_processes=1,
             job_executor_type=JobExecutorType.THREAD,
             initialize_process_timeout=60.0,
             job_memory_warn_mb=0,

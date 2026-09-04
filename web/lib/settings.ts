@@ -126,3 +126,7 @@ export function roomNameForSid(sid: string) {
   const safe = sid.replace(/[^a-zA-Z0-9_-]/g, "-").slice(0, 80);
   return `vc-${safe}`;
 }
+
+export function callRoomName(sid: string) {
+  return `${roomNameForSid(sid)}--${Date.now().toString(36)}`;
+}

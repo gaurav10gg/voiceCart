@@ -1,4 +1,6 @@
 import { EventEmitter } from "node:events";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { randomBytes } from "node:crypto";
 import { availableColors, availableSizes, findVariant, getProduct, getVariant } from "./catalog";
 import { printSummary } from "./describe";
@@ -12,6 +14,37 @@ const telemetry = new Map<string, TurnLatency[]>();
 const bus = new EventEmitter();
 bus.setMaxListeners(200);
 
+const STORE_FILE = process.env.STORE_FILE || "/app/data/store.json";
+
+function persist() {
+  try {
+    mkdirSync(dirname(STORE_FILE), { recursive: true });
+    writeFileSync(
+      STORE_FILE,
+      JSON.stringify({
+        carts: Object.fromEntries(carts),
+        orders: Object.fromEntries(orders),
+        configs: Object.fromEntries(configs),
+      }),
+    );
+  } catch {
+    /* local next dev may not have /app/data */
+  }
+}
+
+try {
+  const saved = JSON.parse(readFileSync(STORE_FILE, "utf8")) as {
+    carts?: Record<string, Cart>;
+    orders?: Record<string, Order>;
+    configs?: Record<string, SessionConfig>;
+  };
+  for (const [key, value] of Object.entries(saved.carts || {})) carts.set(key, value);
+  for (const [key, value] of Object.entries(saved.orders || {})) orders.set(key, value);
+  for (const [key, value] of Object.entries(saved.configs || {})) configs.set(key, value);
+} catch {
+  /* first boot */
+}
+
 function emptyCart(sid: string): Cart {
   return { sid, items: [], total: 0, itemCount: 0, pinBuffer: "", phoneBuffer: "" };
 }
@@ -23,6 +56,7 @@ function totals(cart: Cart) {
 
 function emit(sid: string) {
   bus.emit(`cart:${sid}`, getCart(sid));
+  persist();
 }
 
 export function subscribeCart(sid: string, fn: (cart: Cart) => void) {
@@ -238,6 +272,7 @@ export function mergeCarts(fromSid: string, toSid: string) {
 export function saveConfig(roomName: string, config: SessionConfig) {
   configs.set(roomName, config);
   configs.set(config.sid, config);
+  persist();
 }
 
 export function getConfig(key: string) {
@@ -250,6 +285,7 @@ export function updateSettings(key: string, settings: Partial<AgentSettings>) {
   cfg.settings = { ...cfg.settings, ...settings };
   configs.set(cfg.roomName, cfg);
   configs.set(cfg.sid, cfg);
+  persist();
   return cfg;
 }
 

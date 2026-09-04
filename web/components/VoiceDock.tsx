@@ -36,6 +36,11 @@ export function VoiceDock({
     setError("");
     setStatus("connecting");
     try {
+      if (roomRef.current) {
+        await roomRef.current.disconnect();
+        roomRef.current = null;
+        document.querySelectorAll("[data-lk-audio]").forEach((el) => el.remove());
+      }
       const res = await fetch("/api/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

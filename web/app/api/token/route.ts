@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { AccessToken, RoomServiceClient } from "livekit-server-sdk";
 import { getSidFromCookies, getUserFromCookies } from "@/lib/auth";
-import { defaultSettings, roomNameForSid } from "@/lib/settings";
+import { callRoomName, defaultSettings } from "@/lib/settings";
 import { saveConfig } from "@/lib/store";
 import type { AgentSettings } from "@/lib/types";
 
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   if (!sid) return NextResponse.json({ error: "Missing session" }, { status: 400 });
 
   const user = await getUserFromCookies();
-  const roomName = roomNameForSid(sid);
+  const roomName = callRoomName(sid);
   const settings = { ...defaultSettings(), ...body.settings };
   saveConfig(roomName, {
     sid,
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   try {
     await roomService.createRoom({
       name: roomName,
-      emptyTimeout: 60 * 30,
+      emptyTimeout: 60 * 5,
       departureTimeout: 20,
       metadata: JSON.stringify({ sid }),
     });
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
   }
 
   const at = new AccessToken(apiKey, apiSecret, {
-    identity: `shopper-${sid.slice(0, 24)}`,
+    identity: `shopper-${sid.slice(0, 16)}-${Date.now().toString(36)}`,
     name: user?.name || "Guest",
     ttl: "1h",
   });

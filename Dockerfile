@@ -32,7 +32,8 @@ COPY --from=webbuild /build/public ./web/public
 
 COPY start.sh ./start.sh
 COPY health-proxy.js ./health-proxy.js
-RUN chmod +x ./start.sh
+RUN chmod +x ./start.sh && mkdir -p /app/data
+ENV STORE_FILE=/app/data/store.json
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

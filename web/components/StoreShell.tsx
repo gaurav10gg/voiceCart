@@ -175,7 +175,7 @@ export function StoreShell() {
       </header>
 
       <main className="mx-auto grid max-w-7xl gap-6 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div>
+        <div className="order-2 lg:order-1">
           <label className="sr-only" htmlFor="search">
             Search clothes
           </label>
@@ -190,7 +190,7 @@ export function StoreShell() {
             <ProductGrid products={products} highlightId={cart.lastAddedProductId} />
           </div>
         </div>
-        <div className="space-y-4 lg:sticky lg:top-4 lg:self-start">
+        <div className="order-1 space-y-4 lg:order-2 lg:sticky lg:top-20 lg:self-start">
           <VoiceDock
             sid={sid}
             settings={settings}

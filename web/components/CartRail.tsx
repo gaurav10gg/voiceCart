@@ -80,14 +80,14 @@ export function CartRail({ cart }: { cart: Cart }) {
   const addressReady = !!(address && address.line1 && address.city && address.pincode) && !collecting;
 
   return (
-    <aside className="rounded-2xl border border-[var(--rule)] bg-[var(--paper)] p-5">
+    <aside className="card p-5">
       <h2 className="font-[family-name:var(--font-display)] text-2xl">Your bag</h2>
       {cart.items.length === 0 ? (
         <p className="mt-3 text-[var(--muted)]">Empty. Talk to the shop or tap Add to bag.</p>
       ) : (
         <ul className="mt-4 space-y-4">
           {cart.items.map((item) => (
-            <li key={item.sku} className="border-b border-[var(--rule)] pb-3">
+            <li key={item.sku} className="rise border-b border-[var(--rule)] pb-3">
               <div className="flex justify-between gap-3">
                 <div>
                   <p className="font-semibold leading-snug">{item.name}</p>
@@ -98,7 +98,7 @@ export function CartRail({ cart }: { cart: Cart }) {
                     {item.quantity} × ₹{item.unitPrice}
                   </p>
                 </div>
-                <button type="button" className="text-sm underline" onClick={() => remove(item.sku)}>
+                <button type="button" className="btn-link h-fit text-sm" onClick={() => remove(item.sku)}>
                   Remove
                 </button>
               </div>
@@ -130,11 +130,11 @@ export function CartRail({ cart }: { cart: Cart }) {
         type="button"
         onClick={() => void placeOrder()}
         disabled={busy || cart.items.length === 0}
-        className="mt-4 min-h-12 w-full rounded-full bg-[var(--vat)] text-[var(--paper)] disabled:opacity-40"
+        className="btn btn-solid btn-vat mt-4 min-h-12 w-full"
       >
         {busy ? "Placing…" : "Place COD order"}
       </button>
-      {error ? <p className="mt-2 text-sm text-[var(--madder)]">{error}</p> : null}
+      {error ? <p className="rise mt-2 text-sm text-[var(--madder)]">{error}</p> : null}
     </aside>
   );
 }
@@ -198,21 +198,21 @@ function AddressSlip({
             value={house}
             onChange={(e) => onHouse(e.target.value)}
             placeholder="House and street"
-            className="min-h-11 w-full rounded-lg border border-[var(--rule)] bg-[var(--paper)] px-3 text-base"
+            className="field min-h-11 w-full px-3 text-base"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
               value={city}
               onChange={(e) => onCity(e.target.value)}
               placeholder="City"
-              className="min-h-11 w-full rounded-lg border border-[var(--rule)] bg-[var(--paper)] px-3 text-base"
+              className="field min-h-11 w-full px-3 text-base"
             />
             <input
               value={pincode}
               onChange={(e) => onPin(e.target.value)}
               placeholder="Pin code"
               inputMode="numeric"
-              className="min-h-11 w-full rounded-lg border border-[var(--rule)] bg-[var(--paper)] px-3 text-base"
+              className="field min-h-11 w-full px-3 text-base"
             />
           </div>
           <input
@@ -220,7 +220,7 @@ function AddressSlip({
             onChange={(e) => onPhone(e.target.value)}
             placeholder="Phone, if you like"
             inputMode="tel"
-            className="min-h-11 w-full rounded-lg border border-[var(--rule)] bg-[var(--paper)] px-3 text-base"
+            className="field min-h-11 w-full px-3 text-base"
           />
         </div>
       )}

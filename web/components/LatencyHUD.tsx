@@ -13,7 +13,7 @@ export function LatencyHUD({ turns }: { turns: TurnLatency[] }) {
   const last = turns[turns.length - 1];
   const totals = turns.map((t) => t.turnTotalMs).filter((n): n is number => typeof n === "number");
   return (
-    <section className="rounded-2xl border border-[var(--rule)] bg-[var(--paper)] p-4 text-sm">
+    <section className="card p-4 text-sm">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--indigo)]">Turn latency</p>
       {!last ? (
         <p className="mt-2 text-[var(--muted)]">Numbers appear after the first spoken turn.</p>

@@ -39,7 +39,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-md rounded-2xl border border-[var(--rule)] bg-[var(--paper)] p-8">
+    <form onSubmit={submit} className="rise card mx-auto max-w-md p-8">
       <h1 className="font-[family-name:var(--font-display)] text-4xl">
         {mode === "signup" ? "Make an account" : "Welcome back"}
       </h1>
@@ -52,7 +52,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 min-h-12 w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] px-3 text-lg"
+            className="field mt-1 min-h-12 w-full bg-[var(--linen)] px-3 text-lg"
             autoComplete="name"
             required
           />
@@ -64,7 +64,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 min-h-12 w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] px-3 text-lg"
+          className="field mt-1 min-h-12 w-full bg-[var(--linen)] px-3 text-lg"
           autoComplete="email"
           required
         />
@@ -75,7 +75,7 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 min-h-12 w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] px-3 text-lg"
+          className="field mt-1 min-h-12 w-full bg-[var(--linen)] px-3 text-lg"
           autoComplete={mode === "signup" ? "new-password" : "current-password"}
           required
           minLength={6}
@@ -85,11 +85,11 @@ export function AuthForm({ mode }: { mode: "signup" | "login" }) {
       <button
         type="submit"
         disabled={busy}
-        className="mt-6 min-h-12 w-full rounded-full bg-[var(--indigo)] text-lg text-[var(--paper)]"
+        className="btn btn-solid btn-indigo mt-6 min-h-12 w-full text-lg"
       >
         {busy ? "Please wait…" : mode === "signup" ? "Create account" : "Log in"}
       </button>
-      <button type="button" onClick={() => void guest()} className="mt-3 min-h-12 w-full rounded-full border border-[var(--rule)] text-lg">
+      <button type="button" onClick={() => void guest()} className="btn btn-ghost mt-3 min-h-12 w-full text-lg">
         Continue as guest
       </button>
     </form>

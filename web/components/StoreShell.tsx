@@ -140,29 +140,29 @@ export function StoreShell() {
 
   return (
     <div className="min-h-full">
-      <header className="border-b border-[var(--rule)] bg-[var(--paper)]">
+      <header className="sticky top-0 z-30 border-b border-[var(--rule)] bg-[var(--paper)]/90 backdrop-blur supports-[backdrop-filter]:bg-[var(--paper)]/75">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--indigo)]">VoiceCart</p>
             <h1 className="font-[family-name:var(--font-display)] text-3xl leading-none">The talking cloth shop</h1>
           </div>
           <nav className="flex flex-wrap items-center gap-3 text-base">
-            <button type="button" className="min-h-11 rounded-full border border-[var(--rule)] px-4" onClick={() => setPanelOpen(true)}>
+            <button type="button" className="btn btn-ghost min-h-11 px-4" onClick={() => setPanelOpen(true)}>
               Tune agent
             </button>
             {user ? (
               <>
-                <span>Hello, {user.firstName}</span>
-                <button type="button" className="underline" onClick={() => void logout()}>
+                <span className="text-[var(--muted)]">Hello, {user.firstName}</span>
+                <button type="button" className="btn-link text-base" onClick={() => void logout()}>
                   Log out
                 </button>
               </>
             ) : (
               <>
-                <a className="underline" href="/login">
+                <a className="btn-link text-base" href="/login">
                   Log in
                 </a>
-                <a className="rounded-full bg-[var(--ink)] px-4 py-2 text-[var(--paper)]" href="/signup">
+                <a className="btn btn-solid btn-ink min-h-11 px-5" href="/signup">
                   Sign up
                 </a>
               </>
@@ -184,7 +184,7 @@ export function StoreShell() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="sunflower, live laugh love, chikankari, nighty…"
-            className="min-h-14 w-full rounded-full border border-[var(--rule)] bg-[var(--paper)] px-5 text-lg"
+            className="field !rounded-full min-h-14 w-full px-5 text-lg"
           />
           <div className="mt-6">
             <ProductGrid products={products} highlightId={cart.lastAddedProductId} />

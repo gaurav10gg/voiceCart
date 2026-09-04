@@ -134,16 +134,33 @@ export function VoiceDock({
   }, []);
 
   return (
-    <section className="rounded-2xl border border-[var(--rule)] bg-[var(--paper)] p-5">
+    <section className="card p-5">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--indigo)]">Talk to the shop</p>
           <h2 className="font-[family-name:var(--font-display)] text-2xl">The shop can hear you</h2>
         </div>
         <span
-          className={`h-3 w-3 rounded-full ${status === "live" ? "bg-[var(--vat)]" : "bg-[var(--rule)]"}`}
+          className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${
+            status === "live"
+              ? "border-[var(--vat)]/30 bg-[var(--vat)]/10 text-[var(--vat)]"
+              : status === "connecting"
+                ? "border-[var(--turmeric)]/40 bg-[var(--turmeric)]/10 text-[#8a6a0f]"
+                : "border-[var(--rule)] bg-[var(--linen)] text-[var(--muted)]"
+          }`}
           aria-label={status}
-        />
+        >
+          <span
+            className={`h-2.5 w-2.5 rounded-full ${
+              status === "live"
+                ? "bg-[var(--vat)] animate-pulse"
+                : status === "connecting"
+                  ? "bg-[var(--turmeric)] animate-pulse"
+                  : "bg-[var(--muted)]/50"
+            }`}
+          />
+          {status === "live" ? "Live" : status === "connecting" ? "Connecting" : "Idle"}
+        </span>
       </div>
       <p className="mt-2 text-[var(--muted)]">
         Press the button and say what you want. She will ask about size and colour before putting it in the bag.
@@ -154,14 +171,14 @@ export function VoiceDock({
             <button
               type="button"
               onClick={toggleMute}
-              className="min-h-14 min-w-36 rounded-full bg-[var(--indigo)] px-6 text-lg text-[var(--paper)]"
+              className={`btn min-h-14 min-w-36 px-6 text-lg ${muted ? "btn-solid btn-madder" : "btn-solid btn-indigo"}`}
             >
               {muted ? "Unmute" : "Mute"}
             </button>
             <button
               type="button"
               onClick={() => void disconnect()}
-              className="min-h-14 rounded-full border border-[var(--rule)] px-6 text-lg"
+              className="btn btn-ghost min-h-14 px-6 text-lg"
             >
               End call
             </button>
@@ -171,13 +188,13 @@ export function VoiceDock({
             type="button"
             onClick={() => void connect()}
             disabled={status === "connecting"}
-            className="min-h-14 min-w-48 rounded-full bg-[var(--madder)] px-8 text-lg text-[var(--paper)]"
+            className="btn btn-solid btn-madder min-h-14 min-w-48 px-8 text-lg"
           >
             {status === "connecting" ? "Connecting…" : "Start talking"}
           </button>
         )}
       </div>
-      {error ? <p className="mt-3 text-[var(--madder)]">{error}</p> : null}
+      {error ? <p className="rise mt-3 text-[var(--madder)]">{error}</p> : null}
       <div className="tape mt-5 max-h-40 overflow-auto rounded-md px-3 py-2 text-[1.05rem] leading-relaxed">
         {captions.length === 0 ? (
           <p className="text-[var(--ink)]/70">Captions will appear here so the family can follow along.</p>

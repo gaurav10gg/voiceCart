@@ -22,11 +22,17 @@ export function ControlPanel({
   const allSpeakers = [...SPEAKERS.female, ...SPEAKERS.male];
 
   return (
-    <div className="fixed inset-0 z-40 flex justify-end bg-black/30">
-      <aside className="flex h-full w-full max-w-xl flex-col overflow-auto bg-[var(--paper)] p-6 shadow-2xl">
+    <div
+      className="fixed inset-0 z-40 flex justify-end bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <aside
+        className="rise flex h-full w-full max-w-xl flex-col overflow-auto border-l border-[var(--rule)] bg-[var(--paper)] p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-center justify-between">
           <h2 className="font-[family-name:var(--font-display)] text-3xl">Tune the agent</h2>
-          <button type="button" onClick={onClose} className="min-h-10 px-3 text-lg underline">
+          <button type="button" onClick={onClose} className="btn btn-ghost min-h-10 px-4 text-base">
             Close
           </button>
         </div>
@@ -39,14 +45,14 @@ export function ControlPanel({
         <textarea
           value={settings.prompt}
           onChange={(e) => onChange({ ...settings, prompt: e.target.value })}
-          className="mt-2 min-h-[280px] w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] p-3 text-base leading-relaxed"
+          className="field mt-2 min-h-[280px] w-full bg-[var(--linen)] p-3 text-base leading-relaxed"
         />
 
         <label className="mt-5 block text-sm font-semibold">Voice</label>
         <select
           value={settings.speaker}
           onChange={(e) => onChange({ ...settings, speaker: e.target.value })}
-          className="mt-2 min-h-12 w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] px-3 text-base"
+          className="field mt-2 min-h-12 w-full bg-[var(--linen)] px-3 text-base"
         >
           <optgroup label="Female">
             {SPEAKERS.female.map((s) => (
@@ -71,7 +77,7 @@ export function ControlPanel({
         <select
           value={settings.model}
           onChange={(e) => onChange({ ...settings, model: e.target.value })}
-          className="mt-2 min-h-12 w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] px-3 text-base"
+          className="field mt-2 min-h-12 w-full bg-[var(--linen)] px-3 text-base"
         >
           {LLM_MODELS.map((m) => (
             <option key={m} value={m}>
@@ -85,7 +91,7 @@ export function ControlPanel({
         <select
           value={settings.language}
           onChange={(e) => onChange({ ...settings, language: e.target.value })}
-          className="mt-2 min-h-12 w-full rounded-xl border border-[var(--rule)] bg-[var(--linen)] px-3 text-base"
+          className="field mt-2 min-h-12 w-full bg-[var(--linen)] px-3 text-base"
         >
           {TTS_LANGUAGES.map((l) => (
             <option key={l.code} value={l.code}>
@@ -124,7 +130,7 @@ export function ControlPanel({
         <button
           type="button"
           onClick={onApplyLive}
-          className="mt-6 min-h-12 rounded-full bg-[var(--ink)] text-[var(--paper)]"
+          className="btn btn-solid btn-ink mt-6 min-h-12 px-6"
         >
           {connected ? "Apply to live call" : "Save for next call"}
         </button>

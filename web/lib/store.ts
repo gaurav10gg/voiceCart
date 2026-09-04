@@ -33,7 +33,7 @@ function persist() {
 }
 
 try {
-  const saved = JSON.parse(readFileSync(STORE_FILE, "utf8")) as {
+  const saved = JSON.parse(readFileSync(/*turbopackIgnore: true*/ STORE_FILE, "utf8")) as {
     carts?: Record<string, Cart>;
     orders?: Record<string, Order>;
     configs?: Record<string, SessionConfig>;

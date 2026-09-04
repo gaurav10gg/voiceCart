@@ -48,12 +48,12 @@ export function ProductCard({ product, highlighted, onAdded }: Props) {
 
   return (
     <article
-      className={`group rounded-2xl border bg-[var(--paper)] p-3 shadow-[0_1px_0_rgba(28,36,48,0.06)] transition ${
-        highlighted ? "border-[var(--turmeric)] ring-2 ring-[var(--turmeric)]" : "border-[var(--rule)]"
+      className={`card card-hover group p-3 ${
+        highlighted ? "border-[var(--turmeric)] ring-2 ring-[var(--turmeric)]" : ""
       }`}
     >
       <div className="overflow-hidden rounded-xl bg-[var(--linen)]">
-        <GarmentTile product={product} variant={variant} className="h-56 w-full" />
+        <GarmentTile product={product} variant={variant} className="tile-zoom h-56 w-full" />
       </div>
       <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--indigo)]">
         {product.brand}
@@ -79,7 +79,7 @@ export function ProductCard({ product, highlighted, onAdded }: Props) {
               const nextSizes = availableSizes(product, c.color);
               if (!nextSizes.includes(size)) setSize(nextSizes[0] ?? "");
             }}
-            className={`h-8 w-8 rounded-full border-2 ${color === c.color ? "border-[var(--ink)]" : "border-transparent"}`}
+            className={`swatch h-8 w-8 ${color === c.color ? "swatch-on" : ""}`}
             style={{ background: c.hex }}
           />
         ))}
@@ -90,9 +90,7 @@ export function ProductCard({ product, highlighted, onAdded }: Props) {
             key={s}
             type="button"
             onClick={() => setSize(s)}
-            className={`min-h-10 rounded-full px-3 text-sm ${
-              size === s ? "bg-[var(--ink)] text-[var(--paper)]" : "bg-[var(--linen)] text-[var(--ink)]"
-            }`}
+            className={`chip min-h-10 px-3 ${size === s ? "chip-on" : ""}`}
           >
             {s}
           </button>
@@ -102,11 +100,13 @@ export function ProductCard({ product, highlighted, onAdded }: Props) {
         type="button"
         onClick={add}
         disabled={busy || !variant}
-        className="mt-3 min-h-12 w-full rounded-full bg-[var(--indigo)] text-base text-[var(--paper)] disabled:opacity-50"
+        className="btn btn-solid btn-indigo mt-3 min-h-12 w-full text-base"
       >
         {busy ? "Adding…" : "Add to bag"}
       </button>
-      {msg ? <p className="mt-2 text-sm text-[var(--muted)]">{msg}</p> : null}
+      {msg ? (
+        <p className="rise mt-2 text-sm text-[var(--muted)]">{msg}</p>
+      ) : null}
     </article>
   );
 }

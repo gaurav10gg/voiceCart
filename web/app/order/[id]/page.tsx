@@ -60,13 +60,13 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
     <div className="mx-auto max-w-2xl px-4 py-12">
       <button
         type="button"
-        className="mb-6 text-base underline"
+        className="btn-link mb-6 text-base"
         onClick={() => {
           void leaveOrderSlip(order.id);
           router.replace("/");
         }}
       >
-        Back to the shop
+        ← Back to the shop
       </button>
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--indigo)]">On its way</p>
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl">
@@ -76,7 +76,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
         Slip {order.id} · {when}
       </p>
 
-      <article className="relative mt-8 overflow-hidden rounded-2xl border border-[var(--rule)] bg-[var(--paper)] p-6 shadow-[0_12px_40px_rgba(28,36,48,0.08)]">
+      <article className="rise card relative mt-8 overflow-hidden p-6 shadow-[0_12px_40px_rgba(28,36,48,0.08)]">
         <div className="absolute inset-x-6 top-0 h-2 bg-[repeating-linear-gradient(-12deg,var(--tape)_0_12px,#f0d78a_12px_24px)]" />
         <div className="mt-3 flex items-start justify-between gap-4">
           <div>
@@ -115,7 +115,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
 
       <button
         type="button"
-        className="mt-8 inline-block min-h-12 rounded-full bg-[var(--ink)] px-6 py-3 text-[var(--paper)]"
+        className="btn btn-solid btn-ink mt-8 min-h-12 px-6 py-3"
         onClick={() => {
           void leaveOrderSlip(order.id);
           router.replace("/");

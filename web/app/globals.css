@@ -11,6 +11,11 @@
   --muted: #5c6570;
   --rule: #cfc8bb;
   --tape: #e7c56a;
+
+  --shadow-sm: 0 1px 2px rgba(28, 36, 48, 0.08);
+  --shadow-md: 0 6px 16px -6px rgba(28, 36, 48, 0.28);
+  --shadow-lg: 0 18px 40px -18px rgba(28, 36, 48, 0.4);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html,
@@ -18,6 +23,8 @@ body {
   background: var(--linen);
   color: var(--ink);
   font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .tape {
@@ -39,9 +46,207 @@ textarea {
   font: inherit;
 }
 
+input[type="range"] {
+  accent-color: var(--indigo);
+  cursor: pointer;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--turmeric) 45%, transparent);
+}
+
+/* Everything that behaves like a control gets a pointer and a smooth feel. */
+button,
+[role="button"],
+select,
+summary,
+label:has(> input[type="range"]) {
+  cursor: pointer;
+}
+
+button:disabled,
+button[disabled],
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+[role="button"] {
+  transition:
+    transform 0.14s var(--ease),
+    box-shadow 0.2s var(--ease),
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    filter 0.2s var(--ease),
+    opacity 0.2s var(--ease);
+}
+
+/* A gentle universal press so any button feels clickable. */
+button:not(:disabled):active,
+[role="button"]:not([aria-disabled="true"]):active {
+  transform: translateY(1px);
+}
+
 :focus-visible {
   outline: 3px solid var(--turmeric);
   outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@layer components {
+  /* Pill buttons -------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: var(--shadow-sm);
+    will-change: transform;
+  }
+  .btn:disabled,
+  .btn[disabled] {
+    opacity: 0.45;
+    box-shadow: none;
+  }
+
+  .btn-solid {
+    color: var(--paper);
+    background: var(--indigo);
+  }
+  .btn-solid:not(:disabled):hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+    filter: saturate(1.08) brightness(1.06);
+  }
+  .btn-solid:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+    filter: brightness(0.97);
+  }
+
+  .btn-indigo { background: var(--indigo); }
+  .btn-vat { background: var(--vat); }
+  .btn-ink { background: var(--ink); }
+  .btn-madder { background: var(--madder); }
+
+  /* Ghost / bordered pill ---------------------------------------------- */
+  .btn-ghost {
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--rule);
+    box-shadow: none;
+  }
+  .btn-ghost:not(:disabled):hover {
+    background: color-mix(in srgb, var(--indigo) 8%, transparent);
+    border-color: var(--indigo);
+    color: var(--indigo);
+  }
+
+  /* Quiet underline text button ---------------------------------------- */
+  .btn-link {
+    color: var(--muted);
+    text-underline-offset: 3px;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--muted) 40%, transparent);
+  }
+  .btn-link:hover {
+    color: var(--madder);
+    text-decoration-color: currentColor;
+  }
+
+  /* Size chips ---------------------------------------------------------- */
+  .chip {
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background: var(--linen);
+    color: var(--ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .chip:not(.chip-on):hover {
+    border-color: var(--indigo);
+    background: color-mix(in srgb, var(--indigo) 8%, var(--linen));
+  }
+  .chip-on {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Colour swatches ----------------------------------------------------- */
+  .swatch {
+    position: relative;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    box-shadow: inset 0 0 0 1px rgba(28, 36, 48, 0.15);
+  }
+  .swatch:hover {
+    transform: scale(1.12);
+  }
+  .swatch-on {
+    border-color: var(--ink);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.6),
+      var(--shadow-sm);
+  }
+
+  /* Cards --------------------------------------------------------------- */
+  .card {
+    border-radius: 1rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-sm);
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--indigo) 30%, var(--rule));
+  }
+
+  /* Inputs / selects ---------------------------------------------------- */
+  .field {
+    border-radius: 0.75rem;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .field:hover {
+    border-color: color-mix(in srgb, var(--indigo) 35%, var(--rule));
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--indigo);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--indigo) 18%, transparent);
+  }
+}
+
+/* Product image inside a hovered card gets a subtle zoom. */
+.card-hover .tile-zoom {
+  transition: transform 0.4s var(--ease);
+}
+.card-hover:hover .tile-zoom {
+  transform: scale(1.04);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise 0.4s var(--ease) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

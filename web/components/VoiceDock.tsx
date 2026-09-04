@@ -66,6 +66,9 @@ export function VoiceDock({
         el.setAttribute("playsinline", "");
         el.setAttribute("data-lk-audio", "1");
         document.body.appendChild(el);
+        void el.play().catch(() => {
+          /* autoplay can expire if the agent joins a few seconds late */
+        });
       });
       room.on(RoomEvent.TranscriptionReceived, (segments, participant) => {
         const who = participant?.isLocal ? "you" : "shop";
@@ -95,6 +98,12 @@ export function VoiceDock({
 
       await room.connect(data.url, data.token);
       await room.localParticipant.setMicrophoneEnabled(true);
+      // Keep an audio context unlocked from the click so a late agent track can play.
+      const unlock = new Audio(
+        "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA",
+      );
+      unlock.muted = true;
+      void unlock.play().catch(() => {});
       setMuted(false);
       setStatus("live");
       onConnectedChange?.(true, room);

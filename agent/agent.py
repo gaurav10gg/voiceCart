@@ -331,7 +331,12 @@ class ShoppingAgent(Agent):
                 logger.exception("instruction language update failed")
         named, plain = _GREET.get(self._speak_lang, _GREET["en-IN"])
         line = named.format(name=self.shopper_name) if self.shopper_name else plain
-        self.session.say(line, allow_interruptions=True)
+        logger.info("greeting lang=%s line=%s", self._speak_lang, line)
+        try:
+            await self.session.say(line, allow_interruptions=True)
+            logger.info("greeting spoken")
+        except Exception:
+            logger.exception("greeting failed")
 
     def _stretch_listening(self, on: bool) -> None:
         if getattr(self, "_digit_listen", False) == on:
@@ -756,8 +761,14 @@ async def entrypoint(ctx: JobContext) -> None:
     def _on_error(ev: Any) -> None:
         logger.error("session error: %s", ev)
 
+    @session.on("user_input_transcribed")
+    def _on_heard(ev: Any) -> None:
+        logger.info("heard: %s", getattr(ev, "transcript", ev))
+
     logger.info("shop tools ready sid=%s store=%s", sid, STORE_API_URL)
+    logger.info("session starting room=%s", room_name)
     await session.start(agent=agent, room=ctx.room, record=False)
+    logger.info("session ended room=%s", room_name)
 
 
 if __name__ == "__main__":
@@ -766,9 +777,12 @@ if __name__ == "__main__":
     cli.run_app(
         WorkerOptions(
             entrypoint_fnc=entrypoint,
-            load_threshold=0.95,
-            num_idle_processes=0,
-            initialize_process_timeout=30.0,
+            # Free-tier CPU spikes to ~99% while spawning a job. Do not refuse
+            # the only caller because of that, and keep one warm process so the
+            # first "Start talking" click is not 15s late.
+            load_threshold=float("inf"),
+            num_idle_processes=1,
+            initialize_process_timeout=60.0,
             job_memory_warn_mb=0,
             port=int(os.getenv("AGENT_HEALTH_PORT") or os.getenv("PORT") or 8081),
         )

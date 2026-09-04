@@ -18,6 +18,7 @@ from livekit.agents import (
     Agent,
     AgentSession,
     JobContext,
+    JobExecutorType,
     RunContext,
     StopResponse,
     WorkerOptions,
@@ -786,6 +787,7 @@ if __name__ == "__main__":
             # first "Start talking" click is not 15s late.
             load_threshold=float("inf"),
             num_idle_processes=0,
+            job_executor_type=JobExecutorType.THREAD,
             initialize_process_timeout=60.0,
             job_memory_warn_mb=0,
             port=int(os.getenv("AGENT_HEALTH_PORT") or os.getenv("PORT") or 8081),

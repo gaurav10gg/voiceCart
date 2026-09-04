@@ -31,12 +31,14 @@ COPY --from=webbuild /build/.next/static ./web/.next/static
 COPY --from=webbuild /build/public ./web/public
 
 COPY start.sh ./start.sh
+COPY health-proxy.js ./health-proxy.js
 RUN chmod +x ./start.sh
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PYTHONUNBUFFERED=1
 ENV NUM_CPUS=1
+ENV NODE_OPTIONS=--max-old-space-size=160
 
 EXPOSE 3000
 CMD ["./start.sh"]

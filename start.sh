@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-# The host assigns $PORT to the shop, so the agent's health server needs its own.
-SHOP_PORT="${PORT:-3000}"
+# Render health-checks $PORT. Keep that socket in a tiny proxy so a busy
+# Next.js / Python voice session cannot fail the probe and restart the box.
+PUBLIC_PORT="${PORT:-3000}"
+SHOP_PORT="${SHOP_INTERNAL_PORT:-3001}"
+export SHOP_INTERNAL_PORT="$SHOP_PORT"
 export AGENT_HEALTH_PORT="${AGENT_HEALTH_PORT:-8081}"
-
-# Sharing a container makes tool calls a loopback hop instead of a network round trip.
 export STORE_API_URL="http://127.0.0.1:${SHOP_PORT}"
 
+echo "[start] proxy on :${PUBLIC_PORT}"
+PORT="$PUBLIC_PORT" node /app/health-proxy.js &
+proxy=$!
+
 echo "[start] shop on :${SHOP_PORT}"
-PORT="$SHOP_PORT" HOSTNAME=0.0.0.0 node /app/web/server.js &
+PORT="$SHOP_PORT" HOSTNAME=0.0.0.0 NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=160}" \
+  node /app/web/server.js &
 shop=$!
 
-# Wait for the shop to be ready before starting the agent so the first
-# tool call (greeting → search) doesn't race against Node startup.
 for i in $(seq 1 30); do
   if curl -sf "http://127.0.0.1:${SHOP_PORT}/api/health" >/dev/null 2>&1; then
     echo "[start] shop ready after ${i}s"
@@ -24,26 +28,32 @@ done
 
 start_agent() {
   echo "[start] agent, health on :${AGENT_HEALTH_PORT}"
-  python3 /app/agent/agent.py start &
+  # Lower priority so the proxy/shop still get scheduled for health checks.
+  nice -n 15 python3 /app/agent/agent.py start &
   agent=$!
 }
 
 start_agent
 
 shutdown() {
-  kill "$shop" "$agent" 2>/dev/null || true
+  kill "$proxy" "$shop" "$agent" 2>/dev/null || true
 }
 trap shutdown TERM INT
 
-# Keep the shop up if the agent crashes. Render health-checks the shop; taking
-# the container down on a voice-session OOM just loops forever.
 while true; do
-  wait -n "$shop" "$agent"
+  wait -n "$proxy" "$shop" "$agent"
   code=$?
-  if ! kill -0 "$shop" 2>/dev/null; then
-    echo "[start] shop exited ${code}, stopping the container"
+  if ! kill -0 "$proxy" 2>/dev/null; then
+    echo "[start] proxy exited ${code}, stopping the container"
     shutdown
     exit 1
+  fi
+  if ! kill -0 "$shop" 2>/dev/null; then
+    echo "[start] shop exited ${code}, restarting shop"
+    PORT="$SHOP_PORT" HOSTNAME=0.0.0.0 NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=160}" \
+      node /app/web/server.js &
+    shop=$!
+    continue
   fi
   echo "[start] agent exited ${code}, restarting in 2s"
   sleep 2
